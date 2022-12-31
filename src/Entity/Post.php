@@ -28,7 +28,7 @@ class Post
     private $likes;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $foto;
 
@@ -52,6 +52,15 @@ class Post
     */
     private $user;
 
+    /**
+     * Post constructor.
+     */
+    public function __construct()
+    {
+        $this->likes ='';
+        $this->fecha_publicacion= new \DateTime();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -113,6 +122,46 @@ class Post
     public function setContenido(string $contenido): self
     {
         $this->contenido = $contenido;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of comentarios
+     */ 
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * Set the value of comentarios
+     *
+     * @return  self
+     */ 
+    public function setComentarios($comentarios)
+    {
+        $this->comentarios = $comentarios;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of user
+     */ 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @return  self
+     */ 
+    public function setUser($user)
+    {
+        $this->user = $user;
 
         return $this;
     }
