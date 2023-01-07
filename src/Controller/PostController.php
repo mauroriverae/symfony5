@@ -5,8 +5,11 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -15,7 +18,7 @@ class PostController extends AbstractController
     /**
      * @Route("/registrar-post", name="RegistrarPost")
      */
-    public function index(Request $request, ManagerRegistry $doctrine)
+    public function index(Request $request, ManagerRegistry $doctrine,  SluggerInterface $slugger)
     {
         //request viene del httpfundation 
         // importo POST
@@ -27,6 +30,26 @@ class PostController extends AbstractController
         //si fue envida y es valido 
         if($form->isSubmitted() && $form->isValid())
         {
+            //obtengo el archivo 
+            $brochureFile = $form->get('foto')->getData();
+            if ($brochureFile) {
+                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                // prevee que no se sobrescriban si hay una con el mismo nombre y ataques
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $brochureFile->move(
+                        $this->getParameter('photos_directoryx'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    throw new Exception('ocurrio un error');
+                }
+                $post->setFoto($newFilename);
+            }
             //obtengo el user
             $user = $this->getUser();
             //edito el post

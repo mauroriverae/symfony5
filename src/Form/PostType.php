@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Post;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,7 +16,7 @@ class PostType extends AbstractType
     {
         $builder
             ->add('titulo')
-            ->add('foto')
+            ->add('foto',FileType::class, ['label'=>'selecciona una img', 'mapped'=>false, 'required'=> false])
             ->add('contenido', TextareaType::class)
             ->add('Guardar', SubmitType::class)
         ;
