@@ -23,7 +23,8 @@ class RegistroController extends AbstractController
         $form -> handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $em = $doctrine->getManager();
-            $user -> setPassword($passwordEncoder->encodePassword($user, $form['password']->getdata())); //obtengo pass user
+            //obtengo pass user
+            $user -> setPassword($passwordEncoder->encodePassword($user, $form['password']->getdata())); 
             $em->persist($user);
             $em->flush();
             $this-> addFlash('exito', User::REGISTR0_EXITOSO);
