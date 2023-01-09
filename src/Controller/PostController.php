@@ -8,10 +8,11 @@ use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\String\Slugger\SluggerInterface;
-
 use Symfony\Component\Routing\Annotation\Route;
+
 
 class PostController extends AbstractController
 {
@@ -84,5 +85,25 @@ class PostController extends AbstractController
         $posts = $em->getRepository(Post::class)->findBy(['user'=>$user]);
         return $this->render('post/misposts.html.twig', ['posts'=> $posts]);
 
+    }
+
+    /**
+     * @Route("/likes", options-{"expose"=ture}, name="likes") 
+     */ 
+    public function like(Request $request) {
+        if($request->isXmlHttpRequest()){
+            $em = $this->getDoctrine()->getManager();
+            $user = $this->getUser();
+            $id = $request->request->get('id');
+            $post = $em->getRepository(Posts::class)->find($id);
+            $likes = $post->getLikes();
+            $likes .= $this->getUser()->getId().',';
+            $post->setLikes($likes);
+            $em->flush();
+            return new JsonResponse((['likes'=> $likes]));
+        }else{
+            throw new Exception("Not hacking men");
+            
+        }
     }
 }
