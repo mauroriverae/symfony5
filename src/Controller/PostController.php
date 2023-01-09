@@ -42,7 +42,7 @@ class PostController extends AbstractController
                 // Move the file to the directory where brochures are stored
                 try {
                     $brochureFile->move(
-                        $this->getParameter('photos_directoryx'),
+                        $this->getParameter('photos_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {
@@ -67,7 +67,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("/post/{id}", name="VerPost") 
+     * @Route("/post/{id}", name="verPost") 
      */
     public function verPost($id){
         $em = $this->getDoctrine()->getManager();
