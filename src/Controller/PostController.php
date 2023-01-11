@@ -84,12 +84,13 @@ class PostController extends AbstractController
         $user = $this->getUser();
         $posts = $em->getRepository(Post::class)->findBy(['user'=>$user]);
         return $this->render('post/misposts.html.twig', ['posts'=> $posts]);
-
+        //code new
     }
 
     /**
      * @Route("/likes", options-{"expose"=ture}, name="likes") 
      */ 
+    /*
     public function like(Request $request) {
         if($request->isXmlHttpRequest()){
             $em = $this->getDoctrine()->getManager();
@@ -106,4 +107,5 @@ class PostController extends AbstractController
             
         }
     }
+    */
 }
